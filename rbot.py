@@ -11,40 +11,34 @@ from config import *
 def main():
     try:
         c = rBot()
-    except:
-        e = sys.exc_info()[0]
+    except irclib.ServerConnectionError, e:
         print( "Error: %s" % e )
         exit()
-    # main()
-    
+        
 class rBot:
     def __init__(self):
-        # Set server variables from config
-        self.nick = NICK
-        self.channel_list = CHANNEL_LIST
-        self.irc_server = IRC_SERVER
-        # self.port = SERVER_PORT
-
-        # Connecting to IRC server
         self.irc = irclib.IRC()
         self.server = self.irc.server()
-        self.server.connect( self.irc_server, self.port, self.nick )
-
-        # Join IRC channel
-        for c in self.channel_list:
+        self.server.connect( IRC_SERVER, IRC_PORT, NICK )
+ 
+        for c in CHANNEL_LIST:
             self.server.join( c )
+            self.server.privmsg( c, "Che, I am here" ) # Welcome message
 
+        self.irc.process_forever()
+        
     def getsources(self):
         self.feed_list = FEED_LIST
-        
-    def sendmessage(self, message):    
-        self.msgqueue = []
-        self.msgqueue.append(message)
-        self.msg = msgqueue.pop()
 
-        for c in self.channel_list:
-             self.server.privmsg( c, self.msg )
-        self.irc.process_once()
+    def sendmsgqueue(self, message):    
+        # self.msgqueue = []
+        # self.msgqueue.append(message)
+        # self.msg = msgqueue.pop()
+
+        # for c in self.channel_list:
+        #      self.server.privmsg( c, self.msg )
+        # self.irc.process_once()
+        pass
         
     def feed_refresh():
         pass
