@@ -1,9 +1,11 @@
 #!/usr/bin/python
 
 NICK = "r33bot"
-CHANNEL_LIST = [ "#reevo" ]
+CHANNEL_LIST = [ "#reevo-dev" ]
 IRC_SERVER = "irc.freenode.org"
 IRC_PORT = 6667
+LOG_PATH = "/usr/local/bin/rbot/feeds.log"
+WELCOME_MSG = "Che, I am here!"
 
 FEED_LIST = [
     "EQUIPO|http://equipo.reevo.org/activity.atom?key=ad1b69ef44e0e9e6006586081b1bac4fe36ae23e&show_changesets=1&show_documents=1&show_files=1&show_issues=1&show_messages=1&show_news=1&show_wiki_edits=1&utf8=1",
