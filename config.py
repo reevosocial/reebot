@@ -4,7 +4,7 @@ NICK = "r33bot"
 CHANNEL_LIST = [ "#reevo-dev" ]
 IRC_SERVER = "irc.freenode.org"
 IRC_PORT = 6667
-LOG_PATH = "/usr/local/bin/rbot/feeds.log"
+LOG_PATH = "/opt/rbot/feeds.log"
 WELCOME_MSG = "Che, I am here!"
 
 FEED_LIST = [
