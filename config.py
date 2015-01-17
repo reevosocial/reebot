@@ -41,7 +41,7 @@ FEED_LIST = [
     ]
 
 REEVO_HOSTS = {
-    "beta" : 37.187.37.53}
+    "beta" : "37.187.37.53"}
 
 HELP = {
     "a" : "aaaa",
