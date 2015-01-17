@@ -2,7 +2,7 @@
 """rBot (r33bot) sends information to IRC channel"""
 
 import irclib
-# irclib.DEBUG = True
+irclib.DEBUG = True
 import feedparser
 import sys
 import threading
