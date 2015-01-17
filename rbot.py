@@ -90,13 +90,14 @@ class rBot:
             feeds = feedparser.parse( source, etag=f.etag )
 
             if int(feeds.status) != 304:
-                self.sendmessage("#reevo-dev", feeds.debug_message)
                 for feed in feeds.entries:
                     msgqueue.append( name
                         + " | " + d.feed.title.encode('utf-8')
                         + " > " + entry.title.encode('utf-8')
                         + " : " + entry.link.encode('utf-8') )
-
+            else:
+                msgqueue.append( feeds.debug_message )
+                
         while len( msgqueue ) > 0:
             msgq = msgqueue.pop()
             for channel in CHANNEL_LIST:
