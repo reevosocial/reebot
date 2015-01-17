@@ -1,5 +1,5 @@
 #!/usr/bin/python
-"""rBot (r33bot) sends information to IRC channel"""
+""" rBot: Reevo IRC client 2nd generation"""
 
 import irclib
 irclib.DEBUG = True
