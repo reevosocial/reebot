@@ -32,6 +32,7 @@ class rBot:
         self.irc.add_global_handler("ping", self._ping_ponger, -42)
         self.irc.add_global_handler( 'privmsg', self.handlePrivMessage )
         self.irc.add_global_handler( 'pubmsg', self.handlePubMessage )
+        self.irc.add_global_handler ( 'myinfo', self.handleEcho )
 
         # Get feed list
         self.feed_list = FEED_LIST
@@ -55,6 +56,9 @@ class rBot:
         """ Handle public messages function """
         if event.arguments() [ 0 ].lower().find ( 'hola r33bot' ) == 0:
             self.sendmessage( '#reevo-dev', 'h014' )
+
+    def handleEcho ( self, connection, event ):
+        print ' ' . join ( event.arguments() )
     
     def feed_refresh(self):
 
