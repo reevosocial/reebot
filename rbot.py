@@ -26,13 +26,18 @@ class rBot:
             self.server.join( c )
             self.sendmessage( c, WELCOME_MSG )
 
+        self.irc.add_global_handler("ping", self._ping_ponger, -42)
+            
         self.feed_list = FEED_LIST
         self.feed_refresh()
         self.irc.process_forever()
 
     def sendmessage(self, channel, message):
         self.server.privmsg( channel, message )
-
+        
+    def _ping_ponger(self, connection, event):
+        connection.pong(event.target())
+        
     def feed_refresh(self):
 
         old_feeds = []
