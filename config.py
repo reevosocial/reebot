@@ -39,3 +39,12 @@ FEED_LIST = [
     "MAPA|http://map.reevo.org/feed",
     "RED|http://red.beta.reevo.org/activity?view=rss"
     ]
+
+REEVO_HOSTS = {
+    "beta" : 37.187.37.53}
+
+HELP = {
+    "a" : "aaaa",
+    "b" : "bbbb",
+    "c" : "cccc",
+    "d" : "dddd"}
