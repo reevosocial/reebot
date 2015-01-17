@@ -103,10 +103,10 @@ def feed_refresh():
     while len( msgqueue ) > 0:
         msgq = msgqueue.pop()
         for channel in CHANNEL_LIST:
-            c.sendmessage( c, msgq )
+            c.sendmessage( channel, msgq )
             
     time.sleep(5)
-    threading.Timer( 15.0, feed_refresh() ).start()
+    threading.Timer( 15.0, feed_refresh ).start()
         
 if __name__ == "__main__":
     main()
