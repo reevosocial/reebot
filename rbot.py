@@ -48,7 +48,7 @@ class rBot:
     def handlePubMessage (self, connection, event):
         print event.target() + '> ' + event.source().split ( '!' ) [ 0 ] + ': ' + event.arguments() [ 0 ]
         if event.arguments() [ 0 ].lower().find ( 'hola r33bot' ) == 0:
-            self.sendmessage( '#reevo-dev', 'h014' 
+            self.sendmessage( '#reevo-dev', 'h014' )
 
     def feed_refresh(self):
 
