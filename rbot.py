@@ -29,7 +29,7 @@ class rBot:
         self.irc.add_global_handler("ping", self._ping_ponger, -42)
             
         self.feed_list = FEED_LIST
-        self.feed_refresh()
+        # self.feed_refresh()
         self.irc.process_forever()
 
     def sendmessage(self, channel, message):
