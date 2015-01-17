@@ -71,6 +71,8 @@ class rBot:
         
         if argument.find ( 'hola r33bot' ) == 0:
             self.sendmessage( target, 'hola ' + source )
+        elif argument.find ( 'feed_refresh' ) == 0:
+            self.feed_refresh()
 
     def pinghost(self, host):
         """ Send ping
@@ -85,7 +87,7 @@ class rBot:
         
         for feed_url in FEED_LIST:
             name, source = feed_url.split( '|' )
-            f.feedparser.parse( source )
+            f = feedparser.parse( source )
 
             feeds = feedparser.parse( source, etag=f.etag )
 
@@ -104,7 +106,7 @@ class rBot:
                 self.sendmessage( channel, msgq )
                 
         time.sleep(3)
-        threading.Timer( 60.0, self.feed_refresh() ).start()
+        threading.Timer( 120, self.feed_refresh ).start()
 
 if __name__ == "__main__":
     main()
