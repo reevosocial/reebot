@@ -15,6 +15,7 @@ def main():
         c = rBot()
     except irclib.ServerConnectionError, e:
         exit()
+    sleep(30)
     feed_refresh()
     
 class rBot:
