@@ -13,30 +13,27 @@ from config import *
 def main():
     try:
         c = rBot()
+        feed_refresh()
     except irclib.ServerConnectionError, e:
         exit()
 
 class rBot:
     def __init__(self):
         """ IRC objects constructor """
-
         self.irc = irclib.IRC()
         self.server = self.irc.server()
         self.server.connect( IRC_SERVER, IRC_PORT, NICK )
 
         # Join channels and send welcome message
-        for c in CHANNEL_LIST:
-            self.server.join( c )
-            self.sendmessage( c, WELCOME_MSG )
+        for channel in CHANNEL_LIST:
+            self.server.join( channel )
+            self.sendmessage( channel, WELCOME_MSG )
 
         # Register handlers
         self.irc.add_global_handler( 'ping', self._ping_ponger, -42 )
         self.irc.add_global_handler( 'privmsg', self.handlePrivMessage )
         self.irc.add_global_handler( 'pubmsg', self.handlePubMessage )
 
-        # Get feed list
-        self.feed_list = FEED_LIST
-        # self.feed_refresh()
         self.irc.process_forever()
 
     def sendmessage(self, channel, message):
@@ -65,7 +62,6 @@ class rBot:
         argument -- message
         source -- origin of the message
         """
-        
         argument = event.arguments() [0].lower()
         source = event.source().split( '!' ) [0]
         
@@ -77,40 +73,40 @@ class rBot:
         response = os.system( "ping -c 1 " + host )
         return response
 
-    def feed_refresh(self):
+def feed_refresh():
 
-        old_feeds = []
-        new_feeds = []
-        msgqueue = []
+    old_feeds = []
+    new_feeds = []
+    msgqueue = []
         
-        with open( LOG_PATH, 'r' ) as f:
-            old_feeds = [ line.strip() for line in f ]
+    with open( LOG_PATH, 'r' ) as f:
+        old_feeds = [ line.strip() for line in f ]
             
-        for feed in self.feed_list:
-            name, source = feed.split( "|" )
-            d = feedparser.parse( source )
+    for feed in FEED_LIST:
+        name, source = feed.split( "|" )
+        d = feedparser.parse( source )
             
-            for entry in d.entries:
-                link = [ entry.link.encode('utf-8') ]
-                if link[0] not in old_feeds:
-                    msgqueue.append( name
-                        + " | " + d.feed.title.encode('utf-8')
-                        + " > " + entry.title.encode('utf-8')
-                        + " : " + entry.link.encode('utf-8') )
-                    new_feeds.append(link[0])
+        for entry in d.entries:
+            link = [ entry.link.encode('utf-8') ]
+            if link[0] not in old_feeds:
+                msgqueue.append( name
+                    + " | " + d.feed.title.encode('utf-8')
+                    + " > " + entry.title.encode('utf-8')
+                    + " : " + entry.link.encode('utf-8') )
+                new_feeds.append(link[0])
                     
-        nf = open( LOG_PATH, "a" )
-        for item in new_feeds:
-            nf.write( "%s\n" % item )
-        nf.close()
+    nf = open( LOG_PATH, "a" )
+    for item in new_feeds:
+        nf.write( "%s\n" % item )
+    nf.close()
 
-        while len( msgqueue ) > 0:
-            msgq = msgqueue.pop()
-            for c in CHANNEL_LIST:
-                self.sendmessage( c, msgq )
+    while len( msgqueue ) > 0:
+        msgq = msgqueue.pop()
+        for channel in CHANNEL_LIST:
+            c.sendmessage( c, msgq )
             
-        time.sleep(5)
-        threading.Timer( 30.0, self.feed_refresh() ).start()
+    time.sleep(5)
+    threading.Timer( 15.0, feed_refresh() ).start()
         
 if __name__ == "__main__":
     main()
