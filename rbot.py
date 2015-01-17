@@ -17,39 +17,45 @@ def main():
 
 class rBot:
     def __init__(self):
-        
+        """ IRC objects constructor """
+
         self.irc = irclib.IRC()
         self.server = self.irc.server()
         self.server.connect( IRC_SERVER, IRC_PORT, NICK )
 
+        # Join channels and send welcome message
         for c in CHANNEL_LIST:
             self.server.join( c )
             self.sendmessage( c, WELCOME_MSG )
 
+        # Register handlers
         self.irc.add_global_handler("ping", self._ping_ponger, -42)
         self.irc.add_global_handler( 'privmsg', self.handlePrivMessage )
         self.irc.add_global_handler( 'pubmsg', self.handlePubMessage )
-            
+
+        # Get feed list
         self.feed_list = FEED_LIST
         # self.feed_refresh()
         self.irc.process_forever()
 
     def sendmessage(self, channel, message):
+        """ Send messages function"""
         self.server.privmsg( channel, message )
         
     def _ping_ponger(self, connection, event):
+        """ Send pong command """
         connection.pong(event.target())
 
     def handlePrivMessage (self, connection, event):
-        print event.source().split ( '!' ) [ 0 ] + ': ' + event.arguments() [ 0 ]
+        """ Handle private messages function """
         if event.arguments() [ 0 ].lower().find ( 'hola r33bot' ) == 0:
             self.sendmessage( event.source().split ( '!' ) [ 0 ], 'h014' )
 
     def handlePubMessage (self, connection, event):
-        print event.target() + '> ' + event.source().split ( '!' ) [ 0 ] + ': ' + event.arguments() [ 0 ]
+        """ Handle public messages function """
         if event.arguments() [ 0 ].lower().find ( 'hola r33bot' ) == 0:
             self.sendmessage( '#reevo-dev', 'h014' )
-
+    
     def feed_refresh(self):
 
         old_feeds = []
