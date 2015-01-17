@@ -64,6 +64,7 @@ class rBot:
         """
         argument = event.arguments() [0].lower()
         source = event.source().split( '!' ) [0]
+        target = event.target()
         
         if argument.find ( 'hola r33bot' ) == 0:
             self.sendmessage( target, 'hola ' + source )
