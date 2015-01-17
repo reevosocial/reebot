@@ -13,7 +13,7 @@ from config import *
 def main():
     try:
         c = rBot()
-     except irclib.ServerConnectionError, e:
+    except irclib.ServerConnectionError, e:
         exit()
     
 class rBot:
