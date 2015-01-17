@@ -13,10 +13,10 @@ from config import *
 def main():
     try:
         c = rBot()
-        feed_refresh()
     except irclib.ServerConnectionError, e:
         exit()
-
+    feed_refresh()
+    
 class rBot:
     def __init__(self):
         """ IRC objects constructor """
