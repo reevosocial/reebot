@@ -70,7 +70,7 @@ class rBot:
         
         if argument.find ( 'hola r33bot' ) == 0:
             self.sendmessage( target, 'hola ' + source )
-        else argument.find ( 'feed_refresh' ) == 0:
+        elif argument.find ( 'feed_refresh' ) == 0:
             self.feed_refresh()
 
     def ping(self, host):
