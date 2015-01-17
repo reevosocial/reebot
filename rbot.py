@@ -60,12 +60,13 @@ class rBot:
         
         argument -- message
         source -- origin of the message
+        target -- target of the command
         """
         argument = event.arguments() [0].lower()
         source = event.source().split( '!' ) [0]
         
         if argument.find ( 'hola r33bot' ) == 0:
-            self.sendmessage( '#reevo-dev', 'hola ' + source )
+            self.sendmessage( target, 'hola ' + source )
 
     def pingHost(self, host):
         """ Send ping """
