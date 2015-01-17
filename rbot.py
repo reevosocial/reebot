@@ -27,6 +27,8 @@ class rBot:
             self.sendmessage( c, WELCOME_MSG )
 
         self.irc.add_global_handler("ping", self._ping_ponger, -42)
+        self.irc.add_global_handler( 'privmsg', self.handlePrivMessage )
+        self.irc.add_global_handler( 'pubmsg', self.handlePubMessage )
             
         self.feed_list = FEED_LIST
         # self.feed_refresh()
@@ -37,7 +39,17 @@ class rBot:
         
     def _ping_ponger(self, connection, event):
         connection.pong(event.target())
-        
+
+    def handlePrivMessage (self, connection, event):
+        print event.source().split ( '!' ) [ 0 ] + ': ' + event.arguments() [ 0 ]
+        if event.arguments() [ 0 ].lower().find ( 'hola r33bot' ) == 0:
+            self.sendmessage( event.source().split ( '!' ) [ 0 ], 'h014' )
+
+    def handlePubMessage (self, connection, event):
+        print event.target() + '> ' + event.source().split ( '!' ) [ 0 ] + ': ' + event.arguments() [ 0 ]
+        if event.arguments() [ 0 ].lower().find ( 'hola r33bot' ) == 0:
+            self.sendmessage( '#reevo-dev', 'h014' 
+
     def feed_refresh(self):
 
         old_feeds = []
