@@ -48,8 +48,11 @@ class rBot:
         connection.pong(event.target())
 
     def handlePrivMessage (self, connection, event):
-        """ Handle private messages function """
-        
+        """Handle private messages function
+
+        argument -- message
+        source -- origin of the message
+        """
         argument = event.arguments() [0].lower()
         source = event.source().split( '!' ) [0]
         
@@ -57,7 +60,11 @@ class rBot:
             self.sendmessage( source, 'hola ' + source )
              
     def handlePubMessage (self, connection, event):
-        """ Handle public messages function """
+        """ Handle public messages function
+        
+        argument -- message
+        source -- origin of the message
+        """
         
         argument = event.arguments() [0].lower()
         source = event.source().split( '!' ) [0]
