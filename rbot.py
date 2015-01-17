@@ -15,8 +15,6 @@ def main():
         c = rBot()
     except irclib.ServerConnectionError, e:
         exit()
-    sleep(30)
-    feed_refresh()
     
 class rBot:
     def __init__(self):
@@ -74,40 +72,40 @@ class rBot:
         response = os.system( "ping -c 1 " + host )
         return response
 
-def feed_refresh():
+# def feed_refresh():
 
-    old_feeds = []
-    new_feeds = []
-    msgqueue = []
+#     old_feeds = []
+#     new_feeds = []
+#     msgqueue = []
         
-    with open( LOG_PATH, 'r' ) as f:
-        old_feeds = [ line.strip() for line in f ]
+#     with open( LOG_PATH, 'r' ) as f:
+#         old_feeds = [ line.strip() for line in f ]
             
-    for feed in FEED_LIST:
-        name, source = feed.split( "|" )
-        d = feedparser.parse( source )
+#     for feed in FEED_LIST:
+#         name, source = feed.split( "|" )
+#         d = feedparser.parse( source )
             
-        for entry in d.entries:
-            link = [ entry.link.encode('utf-8') ]
-            if link[0] not in old_feeds:
-                msgqueue.append( name
-                    + " | " + d.feed.title.encode('utf-8')
-                    + " > " + entry.title.encode('utf-8')
-                    + " : " + entry.link.encode('utf-8') )
-                new_feeds.append(link[0])
+#         for entry in d.entries:
+#             link = [ entry.link.encode('utf-8') ]
+#             if link[0] not in old_feeds:
+#                 msgqueue.append( name
+#                     + " | " + d.feed.title.encode('utf-8')
+#                     + " > " + entry.title.encode('utf-8')
+#                     + " : " + entry.link.encode('utf-8') )
+#                 new_feeds.append(link[0])
                     
-    nf = open( LOG_PATH, "a" )
-    for item in new_feeds:
-        nf.write( "%s\n" % item )
-    nf.close()
+#     nf = open( LOG_PATH, "a" )
+#     for item in new_feeds:
+#         nf.write( "%s\n" % item )
+#     nf.close()
 
-    while len( msgqueue ) > 0:
-        msgq = msgqueue.pop()
-        for channel in CHANNEL_LIST:
-            c.sendmessage( channel, msgq )
+#     while len( msgqueue ) > 0:
+#         msgq = msgqueue.pop()
+#         for channel in CHANNEL_LIST:
+#             c.sendmessage( channel, msgq )
             
-    time.sleep(5)
-    threading.Timer( 15.0, feed_refresh() ).start()
+#     time.sleep(5)
+#     threading.Timer( 15.0, feed_refresh() ).start()
         
 if __name__ == "__main__":
     main()
