@@ -19,6 +19,7 @@ def main():
 class rBot:
     def __init__(self):
         """ IRC objects constructor """
+        # Create IRC object and connect to the network
         self.irc = irclib.IRC()
         self.server = self.irc.server()
         self.server.connect( IRC_SERVER, IRC_PORT, NICK )
@@ -30,9 +31,10 @@ class rBot:
 
         # Register handlers
         self.irc.add_global_handler( 'ping', self._ping_ponger, -42 )
-        self.irc.add_global_handler( 'privmsg', self.handlePrivMessage )
-        self.irc.add_global_handler( 'pubmsg', self.handlePubMessage )
+        self.irc.add_global_handler( 'privmsg', self.handleprivmessage )
+        self.irc.add_global_handler( 'pubmsg', self.handlepubmessage )
 
+        # Go into an infinite loop
         self.irc.process_forever()
 
     def sendmessage(self, channel, message):
@@ -43,11 +45,11 @@ class rBot:
         """ Send pong command """
         connection.pong(event.target())
 
-    def handlePrivMessage (self, connection, event):
+    def handleprivmessage (self, connection, event):
         """Handle private messages function
 
         argument -- message
-        source -- origin of the message
+        source -- origin of the message (nickname)
         """
         argument = event.arguments() [0].lower()
         source = event.source().split( '!' ) [0]
@@ -55,12 +57,12 @@ class rBot:
         if argument.find ( 'hola r33bot' ) == 0:
             self.sendmessage( source, 'hola ' + source )
              
-    def handlePubMessage (self, connection, event):
+    def handlepubmessage (self, connection, event):
         """ Handle public messages function
         
         argument -- message
-        source -- origin of the message
-        target -- target of the command
+        source -- origin of the message (nickname)
+        target -- target of the command (channel)
         """
         argument = event.arguments() [0].lower()
         source = event.source().split( '!' ) [0]
@@ -69,8 +71,10 @@ class rBot:
         if argument.find ( 'hola r33bot' ) == 0:
             self.sendmessage( target, 'hola ' + source )
 
-    def pingHost(self, host):
-        """ Send ping """
+    def pinghost(self, host):
+        """ Send ping
+        host -- IP address or domain
+        """
         response = os.system( "ping -c 1 " + host )
         return response
 
