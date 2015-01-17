@@ -7,6 +7,7 @@ import feedparser
 import sys
 import threading
 import time
+import os
 from config import *
 
 def main():
@@ -29,7 +30,7 @@ class rBot:
             self.sendmessage( c, WELCOME_MSG )
 
         # Register handlers
-        self.irc.add_global_handler("ping", self._ping_ponger, -42)
+        self.irc.add_global_handler( 'ping', self._ping_ponger, -42 )
         self.irc.add_global_handler( 'privmsg', self.handlePrivMessage )
         self.irc.add_global_handler( 'pubmsg', self.handlePubMessage )
 
@@ -40,7 +41,7 @@ class rBot:
 
     def sendmessage(self, channel, message):
         """ Send messages function"""
-        self.server.privmsg( channel, message )
+        self.server.privmsg(channel, message)
         
     def _ping_ponger(self, connection, event):
         """ Send pong command """
@@ -48,14 +49,27 @@ class rBot:
 
     def handlePrivMessage (self, connection, event):
         """ Handle private messages function """
-        if event.arguments() [ 0 ].lower().find ( 'hola r33bot' ) == 0:
-            self.sendmessage( event.source().split ( '!' ) [ 0 ], 'hola' )
-
+        
+        argument = event.arguments() [0].lower()
+        source = event.source().split( '!' ) [0]
+        
+        if argument.find ( 'hola r33bot' ) == 0:
+            self.sendmessage( source, 'hola ' + source )
+             
     def handlePubMessage (self, connection, event):
         """ Handle public messages function """
-        if event.arguments() [ 0 ].lower().find ( 'hola r33bot' ) == 0:
-            self.sendmessage( '#reevo-dev', 'hola ' + event.source().split ( '!' ) [ 0 ] )
-    
+        
+        argument = event.arguments() [0].lower()
+        source = event.source().split( '!' ) [0]
+        
+        if argument.find ( 'hola r33bot' ) == 0:
+            self.sendmessage( '#reevo-dev', 'hola ' + source )
+
+    def pingHost(self, host):
+        """ Send ping """
+        response = os.system( "ping -c 1 " + host )
+        return response
+
     def feed_refresh(self):
 
         old_feeds = []
