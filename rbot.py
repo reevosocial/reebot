@@ -102,9 +102,9 @@ class rBot:
             msgq = msgqueue.pop()
             for channel in CHANNEL_LIST:
                 self.sendmessage( channel, msgq )
-                time.sleep(3)
                 
-        threading.Timer( 15.0, feed_refresh() ).start()
+        time.sleep(3)
+        threading.Timer( 60.0, self.feed_refresh() ).start()
 
 if __name__ == "__main__":
     main()
