@@ -34,7 +34,9 @@ class rBot:
         self.irc.add_global_handler( 'privmsg', self.handleprivmessage )
         self.irc.add_global_handler( 'pubmsg', self.handlepubmessage )
 
-        if self.connection.is_connected():
+        # Server connection checker
+        if self.server.is_connected():
+            # Execute feed_refresh()
             self.feed_refresh()
         
         # Go into an infinite loop
