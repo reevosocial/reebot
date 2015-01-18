@@ -22,12 +22,12 @@ class rBot:
         # Create IRC object and connect to the network
         self.irc = irclib.IRC()
         self.server = self.irc.server()
-        self.server.connect( IRC_SERVER, IRC_PORT, NICK )
+        self.server.connect( irc_server, irc_port, nickname )
 
         # Join channels and send welcome message
-        for channel in CHANNEL_LIST:
+        for channel in channels_list:
             self.server.join( channel )
-            self.sendmessage( channel, WELCOME_MSG )
+            self.sendmessage( channel, welcome_message )
 
         # Register handlers
         self.irc.add_global_handler( 'ping', self.ponger, -42 )
@@ -72,6 +72,9 @@ class rBot:
             self.sendmessage( target, 'hola ' + source )
         elif argument.find ( 'feed_refresh' ) == 0:
             self.feed_refresh()
+        
+    def sayhello(self):
+        self.sendmessage( self.target, 'hola ' + self.source )
 
     def ping(self, host):
         """ Send ping
@@ -82,29 +85,43 @@ class rBot:
 
     def feed_refresh(self):
 
+        old_feeds = []
+        new_feeds = []
         msgqueue = []
-        
-        for feed_url in FEED_LIST:
-            name, source = feed_url.split( '|' )
-            f = feedparser.parse( source )
-            f2 = feedparser.parse( source, etag=f.etag )
 
-            if int(f2.status) != 304:
-                for feed in f2.entries:
+        # Reading old feeds from feeds.log file
+        with open( log_path, 'r' ) as f:
+            old_feeds = [ line.strip() for line in f ]
+
+        # Loop over feeds list
+        for feed_source in feed_list:
+            name, source = feed_source.split( '|' )
+            feeds = feedparser.parse( source )
+
+            # Loop over feeds entries
+            for entry in feeds.entries:
+                link = [ entry.link.encode('utf-8') ]
+                # If link doesn't exists in old feeds add it to msgqueue list 
+                if link[0] not in old_feeds:
                     msgqueue.append( name
-                        + " | " + f2.feed.title.encode('utf-8')
-                        + " > " + feed.title.encode('utf-8')
-                        + " : " + feed.link.encode('utf-8') )
-            else:
-                msgqueue.append( f2.debug_message )
-                
-            while len( msgqueue ) > 0:
-                msgq = msgqueue.pop()
-                for channel in CHANNEL_LIST:
-                    self.sendmessage( channel, msgq )
+                        + " | " + feeds.feed.title.encode( 'utf-8' )
+                        + " > " + entry.title.encode( 'utf-8' )
+                        + " : " + entry.link.encode( 'utf-8' ) )
+                    new_feeds.append(link[0])
+
+        # Insert new feeds into feeds.log 
+        nf = open( log_path, "a" )
+        for item in new_feeds:
+            nf.write( "%s\n" % item )
+        nf.close()
+
+        while len( msgqueue ) > 0:
+            msgq = msgqueue.pop()
+            for channel in channels_list:
+                self.sendmessage( channel, msgq )
                 
         time.sleep(3)
-        # threading.Timer( 60, self.feed_refresh ).start()
+        threading.Timer( 60, self.feed_refresh ).start()
 
 if __name__ == "__main__":
     main()
