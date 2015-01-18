@@ -35,12 +35,11 @@ class rBot:
         self.irc.add_global_handler( 'pubmsg', self.handlepubmessage )
         self.irc.add_global_handler(i, getattr(self, "_on_" + i), -10)
 
+        if connection.is_connected() is True:
+            self.feed_refresh()
+        
         # Go into an infinite loop
         self.irc.process_forever()
-
-    def connected_checker(self):
-        if connection.is_connected():
-            self.feed_refresh()
 
     def sendmessage(self, channel, message):
         """ Send messages function"""
