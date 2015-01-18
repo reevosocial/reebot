@@ -18,7 +18,7 @@ def main():
         exit()
     
 class rBot:
-    def __init__(self):
+    def __init__(self, connection_interval=60):
         """ IRC objects constructor """
         # Create IRC object and connect to the network
         self.irc = irclib.IRC()
@@ -37,6 +37,10 @@ class rBot:
 
         # Go into an infinite loop
         self.irc.process_forever()
+
+    def connected_checker(self):
+        if self.connection.is_connected():
+            self.feed_refresh()
 
     def sendmessage(self, channel, message):
         """ Send messages function"""
