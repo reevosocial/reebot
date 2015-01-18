@@ -2,7 +2,7 @@
 """ rBot: Reevo IRC client 2nd generation"""
 
 import irclib
-irclib.DEBUG = True
+irclib.DEBUG = False
 import feedparser
 import sys
 import threading
@@ -13,6 +13,7 @@ from config import *
 def main():
     try:
         c = rBot()
+        c.feed_refresh()
     except irclib.ServerConnectionError, e:
         exit()
     
@@ -70,18 +71,6 @@ class rBot:
         
         if argument.find ( 'hola r33bot' ) == 0:
             self.sendmessage( target, 'hola ' + source )
-        elif argument.find ( 'feed_refresh' ) == 0:
-            self.feed_refresh()
-        
-    def sayhello(self):
-        self.sendmessage( self.target, 'hola ' + self.source )
-
-    def ping(self, host):
-        """ Send ping
-        host -- IP address or domain
-        """
-        response = os.system( "ping -c 1 " + host )
-        return response
 
     def feed_refresh(self):
 
