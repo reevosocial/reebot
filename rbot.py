@@ -13,7 +13,6 @@ from config import *
 def main():
     try:
         c = rBot()
-        c.feed_refresh()
     except irclib.ServerConnectionError, e:
         exit()
     
@@ -34,12 +33,13 @@ class rBot:
         self.irc.add_global_handler( 'ping', self.ponger, -42 )
         self.irc.add_global_handler( 'privmsg', self.handleprivmessage )
         self.irc.add_global_handler( 'pubmsg', self.handlepubmessage )
+        # self.irc.add_global_handler(i, getattr(self, "_on_" + i), -10)
 
         # Go into an infinite loop
         self.irc.process_forever()
 
     def connected_checker(self):
-        if self.connection.is_connected():
+        if self.irc.is_connected():
             self.feed_refresh()
 
     def sendmessage(self, channel, message):
