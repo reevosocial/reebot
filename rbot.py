@@ -52,14 +52,14 @@ class rBot:
 
     def handleprivmessage (self, connection, event):
         """Handle private messages function
-
+        
         argument -- message
         source -- origin of the message (nickname)
         """
         argument = event.arguments() [0].lower()
         source = event.source().split( '!' ) [0]
         
-        if argument.find ( 'hola r33bot' ) == 0:
+        if argument.find ( 'hola ' + nickname ) == 0:
             self.sendmessage( source, 'hola ' + source )
              
     def handlepubmessage (self, connection, event):
@@ -73,7 +73,7 @@ class rBot:
         source = event.source().split( '!' ) [0]
         target = event.target()
         
-        if argument.find ( 'hola r33bot' ) == 0:
+        if argument.find ( 'hola ' + nickname ) == 0:
             self.sendmessage( target, 'hola ' + source )
 
     def feed_refresh(self):
