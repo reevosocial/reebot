@@ -74,7 +74,7 @@ class rBot:
         target = event.target()
         
         if argument.find ( 'hola ' + nickname ) == 0:
-            self.sendmessage( target, 'hola ' + source )
+            self.sendmessage( target, 'No molestes ' + source + '. No tengo tiempo para boludeces.')
 
     def feed_refresh(self):
 
