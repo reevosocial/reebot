@@ -9,6 +9,7 @@ import threading
 import time
 import os
 from config import *
+from messages import messages
 
 def main():
     try:
@@ -27,7 +28,7 @@ class rBot:
         # Join channels and send welcome message
         for channel in channels_list:
             self.server.join( channel )
-            self.sendmessage( channel, welcome_message )
+            self.sendmessage( channel, messages['welcome'] )
 
         # Register handlers
         self.irc.add_global_handler( 'ping', self.ponger, -42 )
@@ -60,7 +61,7 @@ class rBot:
         source = event.source().split( '!' ) [0]
         
         if argument.find ( 'hola ' + nickname ) == 0:
-            self.sendmessage( source, 'hola ' + source )
+            self.sendmessage( source, messages['hello'] + source )
              
     def handlepubmessage (self, connection, event):
         """ Handle public messages function
@@ -74,7 +75,7 @@ class rBot:
         target = event.target()
         
         if argument.find ( 'hola ' + nickname ) == 0:
-            self.sendmessage( target, 'No molestes ' + source + '. No tengo tiempo para boludeces.')
+            self.sendmessage( target, messages['hello'] + source )
 
     def feed_refresh(self):
 
