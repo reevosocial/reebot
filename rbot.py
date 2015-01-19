@@ -115,7 +115,7 @@ class rBot:
                 self.sendmessage( channel, msgq )
                 
         time.sleep(3)
-        threading.Timer( 60, self.feed_refresh ).start()
+        threading.Timer( 360, self.feed_refresh ).start()
 
 if __name__ == "__main__":
     main()
