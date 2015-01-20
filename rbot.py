@@ -13,6 +13,9 @@ from config import *
 from messages import messages
 from reemongo import reemongo
 
+reload(sys)
+sys.setdefaultencoding("utf-8")
+
 def main():
     try:
         db = reemongo()
@@ -95,12 +98,12 @@ class rBot:
 
             # Loop over feeds entries
             for entry in feeds.entries:
-                if self.db.log.find_one( { "url" : entry.link.encode( 'utf-8' ) } ) is None:
+                if self.db.log.find_one( { "url" : entry.link } ) is None:
                     msgqueue.append( feed['name']
-                        + " | " + feeds.feed.title.encode( 'utf-8' )
-                        + " > " + entry.title.encode( 'utf-8' )
-                        + " : " + entry.link.encode( 'utf-8' ) )
-                    self.db.log.insert( { "url" : entry.link.decode( 'utf-8' ) } )
+                        + " | " + feeds.feed.title
+                        + " > " + entry.title
+                        + " : " + entry.link )
+                    self.db.log.insert( { "url" : entry.link } )
                         
         while len( msgqueue ) > 0:
             msgq = msgqueue.pop()
