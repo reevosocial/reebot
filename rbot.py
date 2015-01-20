@@ -98,6 +98,7 @@ class rBot:
                 
                 url = entry.link
                 ftitle = feeds.feed.title
+                title = entry.title
                 link = entry.link
                 
                 if self.db.log.find_one( { "url" : url } ) is None:
