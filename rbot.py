@@ -95,12 +95,17 @@ class rBot:
 
             # Loop over feeds entries
             for entry in feeds.entries:
-                url = entry.link.encode( 'utf-8','ignore' )
+                
+                url = entry.link
+                ftitle = feeds.feed.title
+                link = entry.link
+                
                 if self.db.log.find_one( { "url" : url } ) is None:
                     msgqueue.append( feed['name']
-                        + " | " + feeds.feed.title.encode( 'utf-8','ignore' )
-                        + " > " + entry.title.encode( 'utf-8','ignore' )
-                        + " : " + entry.link.encode( 'utf-8','ignore' ) )
+                        + " | " + ftitle
+                        + " > " + title
+                        + " : " + link )
+                    # 
                     self.db.log.insert( { "url" : url } )
                         
         while len( msgqueue ) > 0:
