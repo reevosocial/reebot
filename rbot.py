@@ -8,18 +8,23 @@ import sys
 import threading
 import time
 import os
+
 from config import *
 from messages import messages
+from reemongo import reemongo
 
 def main():
     try:
-        c = rBot()
+        db = reemongo()
+        c = rBot(db)
     except irclib.ServerConnectionError, e:
         exit()
     
 class rBot:
-    def __init__(self, connection_interval=60):
+    def __init__(self, db):
         """ IRC objects constructor """
+        # MongoDB connection
+        self.db = db
         # Create IRC object and connect to the network
         self.irc = irclib.IRC()
         self.server = self.irc.server()
@@ -78,37 +83,25 @@ class rBot:
             self.sendmessage( target, messages['hello'] + source )
 
     def feed_refresh(self):
-
-        old_feeds = []
-        new_feeds = []
+        
         msgqueue = []
 
-        # Reading old feeds from feeds.log file
-        with open( log_path, 'r' ) as f:
-            old_feeds = [ line.strip() for line in f ]
+        # Get feeds list from mongo
+        feed_list = self.db.feed_list.find()
 
         # Loop over feeds list
-        for feed_source in feed_list:
-            name, source = feed_source.split( '|' )
-            feeds = feedparser.parse( source )
+        for feed in feed_list:
+            feeds = feedparser.parse( feed['url'] )
 
             # Loop over feeds entries
             for entry in feeds.entries:
-                link = [ entry.link.encode('utf-8') ]
-                # If link doesn't exists in old feeds add it to msgqueue list 
-                if link[0] not in old_feeds:
-                    msgqueue.append( name
+                if self.db.log.find_one( { "url" : entry.link.encode( 'utf-8' ) } ) is None:
+                    self.db.log.insert( { "url" : entry.link.encode( 'utf-8' ) } )
+                    msgqueue.append( feed['name']
                         + " | " + feeds.feed.title.encode( 'utf-8' )
                         + " > " + entry.title.encode( 'utf-8' )
                         + " : " + entry.link.encode( 'utf-8' ) )
-                    new_feeds.append(link[0])
-
-        # Insert new feeds into feeds.log 
-        nf = open( log_path, "a" )
-        for item in new_feeds:
-            nf.write( "%s\n" % item )
-        nf.close()
-
+        
         while len( msgqueue ) > 0:
             msgq = msgqueue.pop()
             for channel in channels_list:
