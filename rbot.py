@@ -98,9 +98,9 @@ class rBot:
                 url = entry.link.encode( 'utf-8','ignore' )
                 if self.db.log.find_one( { "url" : url } ) is None:
                     msgqueue.append( feed['name']
-                        + " | " + feeds.feed.title.encode( 'utf-8' )
-                        + " > " + entry.title.encode( 'utf-8' )
-                        + " : " + entry.link.encode( 'utf-8' ) )
+                        + " | " + feeds.feed.title.encode( 'utf-8','ignore' )
+                        + " > " + entry.title.encode( 'utf-8','ignore' )
+                        + " : " + entry.link.encode( 'utf-8','ignore' ) )
                     self.db.log.insert( { "url" : url } )
                         
         while len( msgqueue ) > 0:
