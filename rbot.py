@@ -95,19 +95,12 @@ class rBot:
 
             # Loop over feeds entries
             for entry in feeds.entries:
-                
-                url = entry.link
-                ftitle = feeds.feed.title
-                title = entry.title
-                link = entry.link
-                
-                if self.db.log.find_one( { "url" : url } ) is None:
+                if self.db.log.find_one( { "url" : entry.link.encode( 'utf-8' ) } ) is None:
                     msgqueue.append( feed['name']
-                        + " | " + ftitle
-                        + " > " + title
-                        + " : " + link )
-                    # 
-                    self.db.log.insert( { "url" : url } )
+                        + " | " + feeds.feed.title.encode( 'utf-8' )
+                        + " > " + entry.title.encode( 'utf-8' )
+                        + " : " + entry.link.encode( 'utf-8' ) )
+                    self.db.log.insert( { "url" : entry.link.decode( 'utf-8' ) } )
                         
         while len( msgqueue ) > 0:
             msgq = msgqueue.pop()
