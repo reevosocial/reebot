@@ -2,7 +2,7 @@
 
 ## TODO:
 - Optimizar el modo en que el bot chequea los feeds ya leídos:
- - Eliminar fichero feeds.log e implementar MongoDB
+ - ~~Eliminar fichero feeds.log e implementar MongoDB~~
  - Usar ETag para reducir el número de peticiones: https://pythonhosted.org/feedparser/http-etag.html
 - Implementar algunos register handlers
 ```
