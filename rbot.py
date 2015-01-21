@@ -36,12 +36,13 @@ class rBot:
         # Join channels and send welcome message
         for channel in channels_list:
             self.server.join( channel )
-            self.sendmessage( channel, messages['welcome'] )
+            self.sendmessage( channel, messages['che'] )
 
         # Register handlers
         self.irc.add_global_handler( 'ping', self.ponger, -42 )
         self.irc.add_global_handler( 'privmsg', self.handleprivmessage )
         self.irc.add_global_handler( 'pubmsg', self.handlepubmessage )
+        self.irc.add_global_handler( 'welcome', handlewelcome )
 
         # Server connection checker
         if self.server.is_connected():
@@ -84,6 +85,9 @@ class rBot:
         
         if argument.find ( 'hola ' + nickname ) == 0:
             self.sendmessage( target, messages['hello'] + source )
+
+    def handlewelcome(self, connection, event):
+        self.sendmessage( event.target, messages['welcome'] )
 
     def feed_refresh(self):
         
