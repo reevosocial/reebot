@@ -42,7 +42,7 @@ class rBot:
         self.irc.add_global_handler( 'ping', self.ponger, -42 )
         self.irc.add_global_handler( 'privmsg', self.handleprivmessage )
         self.irc.add_global_handler( 'pubmsg', self.handlepubmessage )
-        self.irc.add_global_handler( 'welcome', handlewelcome )
+        self.irc.add_global_handler( 'welcome', self.handlewelcome )
 
         # Server connection checker
         if self.server.is_connected():
