@@ -97,7 +97,7 @@ class rBot:
         self.sendmessage( source, messages['welcome'] )
 
     def feed_refresh(self):
-        """ Read feeds and sends them to the channel """
+        """ Read feeds and sends the news to the channel """
         
         msgqueue = []
 
@@ -108,17 +108,17 @@ class rBot:
         for feed in feed_list:
             feeds = feedparser.parse( feed['url'] )
 
-            # Loop over feeds entries
+            # Loop over entries
             for entry in feeds.entries:
                 if self.db.log.find_one( { "url" : entry.link } ) is None:
                     msgqueue.append( feed['name']
                         + " | " + feeds.feed.title
                         + " > " + entry.title
                         + " : " + entry.link )
-                    # Update feeds log in the database
+                    # Update log in the database
                     self.db.log.insert( { "url" : entry.link } )
                     
-        # Send newer feeds to the channel
+        # Send newer entries to the channel
         while len( msgqueue ) > 0:
             msgq = msgqueue.pop()
             for channel in channels_list:
