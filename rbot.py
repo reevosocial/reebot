@@ -49,7 +49,6 @@ class rBot:
 
         # Server connection checker
         if self.server.is_connected():
-            # Execute feed_refresh()
             self.feed_refresh()
         
         # Go into an infinite loop
@@ -118,7 +117,8 @@ class rBot:
                         + " : " + entry.link )
                     # Update feeds log in the database
                     self.db.log.insert( { "url" : entry.link } )
-                        
+                    
+        # Send newer feeds to the channel
         while len( msgqueue ) > 0:
             msgq = msgqueue.pop()
             for channel in channels_list:
