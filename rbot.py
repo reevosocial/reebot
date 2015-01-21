@@ -27,6 +27,7 @@ def main():
 class rBot:
     def __init__(self, db):
         """ IRC objects constructor """
+        
         # MongoDB connection
         self.db = db
 
@@ -38,7 +39,7 @@ class rBot:
         # Join channels and send welcome message
         for channel in channels_list:
             self.server.join( channel )
-	    self.sendmessage( channel, messages['che'] )
+            self.sendmessage( channel, messages['che'] )
 
         # Register handlers
         self.irc.add_global_handler( 'ping', self.ponger, -42 )
@@ -89,14 +90,15 @@ class rBot:
             self.sendmessage( target, messages['hello'] + source )
 
     def handlejoin(self, connection, event):
-	""" Handle channel join
+        """ Handle channel join
 
-	source -- user who joined the channel
-	"""
-	source = event.source().split( '!' ) [0]
-	self.sendmessage( source, messages['welcome'] )
+        source -- user who has joined the channel
+        """
+        source = event.source().split( '!' ) [0]
+        self.sendmessage( source, messages['welcome'] )
 
     def feed_refresh(self):
+        """ Read feeds and sends them to the channel """
         
         msgqueue = []
 
@@ -114,6 +116,7 @@ class rBot:
                         + " | " + feeds.feed.title
                         + " > " + entry.title
                         + " : " + entry.link )
+                    # Update feeds log in the database
                     self.db.log.insert( { "url" : entry.link } )
                         
         while len( msgqueue ) > 0:
