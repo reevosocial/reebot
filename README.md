@@ -1,4 +1,4 @@
-# rBot (reebot IRC client 2nd generation)
+# Reebot IRC client 2nd generation
 
 ## TODO:
 - Optimizar el modo en que el bot chequea los feeds ya leídos:
