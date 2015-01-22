@@ -1,11 +1,10 @@
 #!/usr/bin/python
 
 # IRC server params
-nickname = "r33bot"
+nickname = "reebot"
 channels_list = [ "#reevo-dev" ]
 irc_server = "irc.freenode.org"
 irc_port = 6667
-log_path = "/opt/rbot/feeds.log"
 
 # Database params
 db_params = {
