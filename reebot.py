@@ -115,7 +115,7 @@ class rBot:
                         + " | " + feeds.feed.title
                         + " > " + entry.title
                         + " : " + entry.link )
-                    # Update log in the database
+                    # Insert link into log database
                     self.db.log.insert( { "url" : entry.link } )
                     
         # Send newer entries to the channel
@@ -123,8 +123,9 @@ class rBot:
             msgq = msgqueue.pop()
             for channel in channels_list:
                 self.sendmessage( channel, msgq )
-                
-        time.sleep(3)
+
+        time.sleep(2)
+        # Refresh interval (every X seconds)
         threading.Timer( 60, self.feed_refresh ).start()
 
 if __name__ == "__main__":
