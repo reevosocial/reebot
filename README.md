@@ -38,3 +38,6 @@ irc.add_global_handler ( 'endofnames', handleNoSpace ) # Channel name list ( end
 - Crear función que envíe ping a beta.reevo.org y mande aviso al canal IRC si no responde
 - Crear módulo con diccionario de funciones de respuesta a argumentos
 
+## Licencia
+
+ReeBot se publica bajo AGPLv3. Creado por el equipo de Reevo.
