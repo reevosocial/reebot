@@ -1,146 +1,77 @@
 #!/usr/bin/python
-""" rBot: Reevo IRC client 2nd generation"""
+#
+# ReeBot informs updated in RSS/Atom channels
+#
+# based in IRC b0t by Akarsh Simha
+#
+# Licensed under the GNU General Public License v3
+
 
 import irclib
-irclib.DEBUG = False
 import feedparser
-import sys
+import os
 import threading
 import time
-import os
 
-from config import *
-from messages import messages
-from reemongo import reemongo
 
-# Set default encoding
-reload(sys)
-sys.setdefaultencoding("utf-8")
+nick = "reebot" # Name of the creature
+channel_list = [ "#reevo" ] # Put in a list of channels
 
-def main():
-    try:
-        db = reemongo()
-        c = rBot(db)
-    except irclib.ServerConnectionError, e:
-        exit()
-    
-class rBot:
-    def __init__(self, db):
-        """ IRC objects constructor """
-        
-        # MongoDB connection
-        self.db = db
 
-        # Create IRC object and connect to the network
-        self.irc = irclib.IRC()
-        self.server = self.irc.server()
-        self.server.connect( irc_server, irc_port, nickname )
+sources = os.path.dirname(os.path.realpath(__file__)) + "/sources.txt"
+f = open(sources)
+feed_list = f.readlines()
+f.close()
 
-        # Join channels and send welcome message
-        for channel in channels_list:
-            self.server.join( channel )
-            self.sendmessage( channel, messages['che'] )
+old_entries_file = os.path.dirname(os.path.realpath(__file__)) + "/feeds.log"
+if not os.path.exists(old_entries_file):
+    open(old_entries_file, 'w').close() 
 
-        # Register handlers
-        self.irc.add_global_handler( 'ping', self.ponger, -42 )
-        self.irc.add_global_handler( 'privmsg', self.handleprivmessage )
-        self.irc.add_global_handler( 'pubmsg', self.handlepubmessage )
-        self.irc.add_global_handler( 'join', self.handlejoin )
 
-        # Server connection checker
-        if self.server.is_connected():
-            self.feed_refresh()
-        
-        # Go into an infinite loop
-        self.irc.process_forever()
+irc = irclib.IRC()
+server = irc.server()
 
-    def sendmessage(self, channel, message):
-        """ Send messages function"""
-        self.server.privmsg(channel, message)
-        
-    def ponger(self, connection, event):
-        """ Send pong command """
-        connection.pong(event.target())
+server.connect( "irc.freenode.org", 6667, nick ) # TODO: Make this general
+# server.privmsg( "NickServ", "identify " )
 
-    def handleprivmessage (self, connection, event):
-        """Handle private messages function
-        
-        argument -- message
-        source -- origin of the message (nickname)
-        """
-        argument = event.arguments() [0].lower()
-        source = event.source().split( '!' ) [0]
-        
-        if argument.find ( 'hola ' + nickname ) == 0:
-            self.sendmessage( source, messages['hello'] + source )
-             
-    def handlepubmessage (self, connection, event):
-        """ Handle public messages function
-        
-        argument -- message
-        source -- origin of the message (nickname)
-        target -- target of the command (channel)
-        """
-        argument = event.arguments() [0].lower()
-        source = event.source().split( '!' ) [0]
-        target = event.target()
-        
-        if argument.find ( 'hola ' + nickname ) == 0:
-            self.sendmessage( target, messages['hello'] + source )
+msgqueue = []
 
-    def handlejoin(self, connection, event):
-        """ Handle channel join
+def feed_refresh():
+ #print "Test"
+ FILE = open( old_entries_file, "r" )
+ filetext = FILE.read()
+ FILE.close()
+ for feed in feed_list:
+  NextFeed = False
+  name,url = feed.split("|")
+  d = feedparser.parse( url )
+  for entry in d.entries:
+   id = entry.link.encode('utf-8')+entry.title.encode('utf-8')
+   if id in filetext:
+    NextFeed = True
+   else:
+    FILE = open( old_entries_file, "a" )
+    #print entry.title + "\n"
+    FILE.write( id + "\n" )
+    FILE.close()
+    msgqueue.append( name + " | " + d.feed.title.encode('utf-8') + " > " + entry.title.encode('utf-8') + " : " + entry.link.encode('utf-8') )
+   if NextFeed:
+    break;
 
-        source -- user who has joined the channel
-        target -- target of the command (channel)
-        """
-        source = event.source().split( '!' ) [0]
-        target = event.target()
+ t = threading.Timer( 10.0, feed_refresh ) # TODO: make this static
+ t.start()
 
-        # Check if user has been accessed before
-        if self.db.users.find_one( { "user" : source } ) is None:
-            # If not insert the nickname into the database
-            self.db.users.insert( {
-                "user" : source,
-                "join_date" : time.strftime("%Y-%m-%d %H:%M:%S"),
-                "channel" : [ target ]
-            } )
-            # Send welcome message to user
-            self.sendmessage( source, messages['welcome'] )
-        else:
-            pass
+for channel in channel_list:
+  server.join( channel )
 
-    def feed_refresh(self):
-        """ Read feeds and sends the news to the channel """
-        
-        msgqueue = []
+feed_refresh()
 
-        # Get feeds list from mongo
-        feed_list = self.db.feed_list.find()
-
-        # Loop over feeds list
-        for feed in feed_list:
-            feeds = feedparser.parse( feed['url'] )
-
-            # Loop over entries
-            for entry in feeds.entries:
-                if self.db.log.find_one( { "url" : entry.link } ) is None:
-                    msgqueue.append( feed['name']
-                        + " | " + feeds.feed.title
-                        + " > " + entry.title
-                        + " : " + entry.link )
-                    # Insert link into log database
-                    self.db.log.insert( { "url" : entry.link } )
-                    
-        # Send newer entries to the channel
-        while len( msgqueue ) > 0:
-            msgq = msgqueue.pop()
-            for channel in channels_list:
-                self.sendmessage( channel, msgq )
-
-        time.sleep(2)
-        # Refresh interval (every X seconds)
-        threading.Timer( 60, self.feed_refresh ).start()
-
-if __name__ == "__main__":
-    main()
+while 1:
+ while len(msgqueue) > 0:
+  msg = msgqueue.pop()
+  for channel in channel_list:
+   # server.notice( channel, msg )
+   server.privmsg( channel, msg )
+ time.sleep(3) # TODO: Fix bad code
+ irc.process_once()
+ time.sleep(3) # So that we don't hog the CPU!

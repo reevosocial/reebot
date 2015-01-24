@@ -1,0 +1,11 @@
+BETA|http://red.beta.reevo.org/activity?view=rss
+EQUIPO|http://equipo.reevo.org/activity.atom?key=ad1b69ef44e0e9e6006586081b1bac4fe36ae23e&show_changesets=1&show_documents=1&show_files=1&show_issues=1&show_messages=1&show_news=1&show_wiki_edits=1&utf8=1
+GIT|http://git.reevo.org/civicrm/reevo-civicrm-tools//atom
+GIT|http://git.reevo.org/etherpad/ep_email_notifications//atom
+GIT|http://git.reevo.org/etherpad/ep_syntaxhighlighting//atom
+GIT|http://git.reevo.org/irc/reebot//atom
+GIT|http://git.reevo.org/reevo/reevo-beta-old//atom
+GIT|http://git.reevo.org/reevo/reevo-core//atom
+GIT|http://git.reevo.org/ushahidi/reevo-ushahidi-theme//atom
+MAPA|http://map.reevo.org/feed
+RECURSO|http://www.reevo.org/wp-content/plugins/re-importer/feed.xml
