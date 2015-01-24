@@ -92,9 +92,23 @@ class rBot:
         """ Handle channel join
 
         source -- user who has joined the channel
+        target -- target of the command (channel)
         """
         source = event.source().split( '!' ) [0]
-        self.sendmessage( source, messages['welcome'] )
+        target = event.target()
+
+        # Check if user has been accessed before
+        if self.db.users.find_one( { "user" : source } ) is None:
+            # If not insert the nickname into the database
+            self.db.users.insert( {
+                "user" : source,
+                "join_date" : time.strftime("%Y-%m-%d %H:%M:%S"),
+                "channel" : [ target ]
+            } )
+            # Send welcome message
+            self.sendmessage( source, messages['welcome'] )
+        else:
+            pass
 
     def feed_refresh(self):
         """ Read feeds and sends the news to the channel """

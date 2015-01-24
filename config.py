@@ -12,4 +12,5 @@ db_params = {
     'database' : 'reevo',
     'feed_list' : 'feed_list',
     'log' : 'log',
+    'users' : 'users',
 }

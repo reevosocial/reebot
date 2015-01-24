@@ -10,5 +10,5 @@ class reemongo:
         self.db = self.client[db_params['database']]
         self.feed_list = self.db[db_params['feed_list']]
         self.log = self.db[db_params['log']]
-
+        self.users = self.db[db_params['users']]
 
