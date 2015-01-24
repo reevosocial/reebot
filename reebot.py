@@ -105,7 +105,7 @@ class rBot:
                 "join_date" : time.strftime("%Y-%m-%d %H:%M:%S"),
                 "channel" : [ target ]
             } )
-            # Send welcome message
+            # Send welcome message to user
             self.sendmessage( source, messages['welcome'] )
         else:
             pass

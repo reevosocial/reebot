@@ -1,6 +1,6 @@
 #!/usr/bin/python
 """ MongoDB connection module """
-
+#
 import pymongo
 from config import db_params
 
