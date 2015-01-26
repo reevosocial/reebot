@@ -2,7 +2,7 @@
 
 # IRC server params
 nickname = "reebot"
-channels_list = [ "#reevo-dev" ]
+channels_list = [ "#reevo" ]
 irc_server = "irc.freenode.org"
 irc_port = 6667
 
