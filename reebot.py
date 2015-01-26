@@ -142,7 +142,7 @@ class rBot:
 
         time.sleep(2)
         # Refresh interval (every X seconds)
-        threading.Timer( 60, self.feed_refresh ).start()
+        threading.Timer( 10, self.feed_refresh ).start()
 
 if __name__ == "__main__":
     main()
