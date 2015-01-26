@@ -107,6 +107,8 @@ class rBot:
             } )
             # Send welcome message to user
             self.sendmessage( source, messages['welcome'] )
+            time.sleep(3)
+            self.sendmessage( source, messages['welcome_part2'] )
         else:
             pass
 
