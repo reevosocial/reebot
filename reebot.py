@@ -8,6 +8,7 @@ import sys
 import threading
 import time
 import os
+import re
 
 from config import *
 from messages import messages
@@ -116,6 +117,9 @@ class rBot:
         """ Read feeds and sends the news to the channel """
         
         msgqueue = []
+        
+        # Strip html tags regex
+        r = re.compile('<.*?>')
 
         # Get feeds list from mongo
         feed_list = self.db.feed_list.find()
@@ -129,7 +133,7 @@ class rBot:
                 if self.db.log.find_one( { "url" : entry.link } ) is None:
                     msgqueue.append( feed['name']
                         + " | " + feeds.feed.title + " > "
-                        + " : " . join(map(lambda tag : entry[tag], feed['tags'])) )
+                        + " : " . join(map(lambda tag : re.sub(r, '', entry[tag]), feed['tags'])) )
                     # Insert link into log database
                     self.db.log.insert( { "url" : entry.link } )
                     
