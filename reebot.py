@@ -128,9 +128,8 @@ class rBot:
             for entry in feeds.entries:
                 if self.db.log.find_one( { "url" : entry.link } ) is None:
                     msgqueue.append( feed['name']
-                        + " | " + feeds.feed.title
-                        + " > " + entry.title
-                        + " : " + entry.link )
+                        + " | " + feeds.feed.title + " > "
+                        + " : " . join(map(lambda tag : entry[tag], feed['tags'])) )
                     # Insert link into log database
                     self.db.log.insert( { "url" : entry.link } )
                     
