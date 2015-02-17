@@ -1,5 +1,6 @@
 #!/usr/bin/python
-""" rBot: Reevo IRC client 2nd generation"""
+# -*- coding: utf-8 -*-
+""" Reebot: Reevo IRC client 2nd generation"""
 
 import irclib
 irclib.DEBUG = False
@@ -13,6 +14,7 @@ import re
 from config import *
 from messages import messages
 from reemongo import reemongo
+from reefuncs import *
 
 # Set default encoding
 reload(sys)
@@ -44,10 +46,13 @@ class rBot:
 
         # Register handlers
         self.irc.add_global_handler( 'ping', self.ponger, -42 )
-        self.irc.add_global_handler( 'privmsg', self.handleprivmessage )
-        self.irc.add_global_handler( 'pubmsg', self.handlepubmessage )
+        self.irc.add_global_handler( 'privmsg', self.handlemessage )
+        self.irc.add_global_handler( 'pubmsg', self.handlemessage )
         self.irc.add_global_handler( 'join', self.handlejoin )
 
+        # Reefunc instance
+        self.rf = reefuncs()
+        
         # Server connection checker
         if self.server.is_connected():
             self.feed_refresh()
@@ -63,19 +68,14 @@ class rBot:
         """ Send pong command """
         connection.pong(event.target())
 
-    def handleprivmessage (self, connection, event):
-        """Handle private messages function
-        
-        argument -- message
-        source -- origin of the message (nickname)
-        """
-        argument = event.arguments() [0].lower()
-        source = event.source().split( '!' ) [0]
-        
-        if argument.find ( 'hola ' + nickname ) == 0:
-            self.sendmessage( source, messages['hello'] + source )
-             
-    def handlepubmessage (self, connection, event):
+    def reegex(self, argument):
+        """ Check arguments """
+        r = re.compile('(^reebot (.*))')
+        m = re.match(r, argument)
+        if m:
+            return m.group(2)
+            
+    def handlemessage (self, connection, event):
         """ Handle public messages function
         
         argument -- message
@@ -84,9 +84,18 @@ class rBot:
         """
         argument = event.arguments() [0].lower()
         source = event.source().split( '!' ) [0]
-        target = event.target()
+        target = channels_list[0]
         
-        if argument.find ( 'hola ' + nickname ) == 0:
+        if self.reegex(argument):
+            try:
+                for lines in self.rf.argparser(self.reegex(argument)).splitlines():
+                    self.sendmessage( target, lines )
+                    time.sleep(1) # Prevent floods
+            except:
+                # Avoid stdout messages
+                # TODO: Reebot hangs when argparse prints help message (-h/--help)
+                pass
+        elif argument.find ( 'hola ' + nickname ) == 0:
             self.sendmessage( target, messages['hello'] + source )
 
     def handlejoin(self, connection, event):
@@ -107,12 +116,10 @@ class rBot:
                 "channel" : [ target ]
             } )
             # Send welcome message to user
-            self.sendmessage( source, messages['welcome'] )
-            time.sleep(3)
-            self.sendmessage( source, messages['welcome_part2'] )
-        else:
-            pass
-
+            for m in messages['welcome']:
+                self.sendmessage( source, m )
+                time.sleep(3)
+            
     def feed_refresh(self):
         """ Read feeds and sends the news to the channel """
         
