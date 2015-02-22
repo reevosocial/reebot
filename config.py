@@ -2,8 +2,8 @@
 # -*- coding: utf-8 -*-
 
 # IRC server params
-nickname = "r33bot"
-channels_list = [ "#reevo-dev" ]
+nickname = "rebot"
+channels_list = [ "#reevo" ]
 irc_server = "irc.freenode.org"
 irc_port = 6667
 
