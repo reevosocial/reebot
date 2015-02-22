@@ -1,8 +1,9 @@
 #!/usr/bin/python
+# -*- coding: utf-8 -*-
 
 # IRC server params
-nickname = "reebot"
-channels_list = [ "#reevo" ]
+nickname = "r33bot"
+channels_list = [ "#reevo-dev" ]
 irc_server = "irc.freenode.org"
 irc_port = 6667
 
@@ -12,5 +13,19 @@ db_params = {
     'database' : 'reevo',
     'feed_list' : 'feed_list',
     'log' : 'log',
-    'users' : 'users'
+    'users' : 'users',
+}
+
+# Reevo servers
+hosts = {
+    'ergaster' : {
+        'IP' : '88.80.186.30',
+        'Descripción' : 'Servidor de pruebas',
+        'Dominio' : 'peervox.org',
+        'Localización' : 'London, England, UK', },
+    'raddad' : {
+        'IP' : '37.187.37.53',
+        'Descripción' : 'Servidor de produccion',
+        'Dominio' : 'reevo.org',
+        'Localización' : 'Strasbourg, Francia', }
 }
