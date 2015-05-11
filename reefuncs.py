@@ -3,7 +3,6 @@
 
 import argparse
 import subprocess
-from config import hosts
 
 class reefuncs:
     """ Parse arguments and execute functions
