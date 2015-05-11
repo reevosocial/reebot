@@ -31,7 +31,7 @@ class reefuncs:
         # parser.add_argument('-p', '--ping', type=self.ping, help='send ping to server', action='store', dest='host', nargs='+')
         parser.add_argument('-m', '--msg', help='send message', action='store', dest='message', nargs='+')
         # parser.add_argument('-i', '--info', type=self.info, help='print host information', action='store', dest='hostname', nargs='+')
-        parser.add_argument('-k', '--matate', type=self.matate, help='killing myself', action='store', dest='matate')
+        parser.add_argument('-k', '--matate', type=self.matate, help='killing myself', action='store', dest='matate', nargs='+')
 
         # Parsing arguments
         args = parser.parse_args(arguments.split())
