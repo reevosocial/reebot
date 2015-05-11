@@ -148,8 +148,7 @@ class rBot:
             msgq = msgqueue.pop()
             for channel in channels_list:
                 self.sendmessage( channel, msgq )
-
-        time.sleep(2)
+                time.sleep(1)
         # Refresh interval (every X seconds)
         threading.Timer( 10, self.feed_refresh ).start()
 
