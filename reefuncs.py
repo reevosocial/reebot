@@ -28,16 +28,16 @@ class reefuncs:
         
         # Adding arguments
         parser.add_argument('-t', '--task', type=self.task, help='show task status', action='store', dest='task', nargs='+')
-        parser.add_argument('-p', '--ping', type=self.ping, help='send ping to server', action='store', dest='host', nargs='+')
+        # parser.add_argument('-p', '--ping', type=self.ping, help='send ping to server', action='store', dest='host', nargs='+')
         parser.add_argument('-m', '--msg', help='send message', action='store', dest='message', nargs='+')
-        parser.add_argument('-i', '--info', type=self.info, help='print host information', action='store', dest='hostname', nargs='+')
+        # parser.add_argument('-i', '--info', type=self.info, help='print host information', action='store', dest='hostname', nargs='+')
         parser.add_argument('-k', '--matate', type=self.matate, help='killing myself', action='store', dest='matate')
 
         # Parsing arguments
         args = parser.parse_args(arguments.split())
         
         # Put responses in a list (the library may already do this...)
-        responses = [args.task, args.host, args.hostname, args.message]
+        responses = [args.task, args.message]
 
         # Return responses
         for r in responses:
@@ -55,13 +55,13 @@ class reefuncs:
         rc = killreebot.returncode
         return rc
         
-    def ping(self, host):
-        """ Send ping to host """        
-        msg = []
-        cmd = ['ping', '-c 1', host]
-        ping = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
-        out, err = ping.communicate()
-        rc = ping.returncode
-        msg.append('Host %s is %s\n' % \
-                       (host, 'up' if rc == 0 else 'down'))
-        return '\n'.join(msg)
+    # def ping(self, host):
+    #     """ Send ping to host """        
+    #     msg = []
+    #     cmd = ['ping', '-c 1', host]
+    #     ping = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
+    #     out, err = ping.communicate()
+    #     rc = ping.returncode
+    #     msg.append('Host %s is %s\n' % \
+    #                    (host, 'up' if rc == 0 else 'down'))
+    #     return '\n'.join(msg)
