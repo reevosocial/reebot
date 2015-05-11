@@ -49,7 +49,7 @@ class reefuncs:
         pass
 
     def matate(self):
-        cmd = ['/etc/init.d/reebot', 'restart']
+        cmd = ['/etc/init.d/reebot', 'stop']
         killreebot = subprocess.Popen(cmd, stdout=subprocess.PIPE, stderr=subprocess.PIPE)
         out, err = killreebot.communicate()
         rc = killreebot.returncode
